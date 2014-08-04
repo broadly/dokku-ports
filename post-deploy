@@ -1,0 +1,24 @@
+#!/bin/bash
+# Get external port number that maps to 5001 (HTTPS)
+CONTAINER_ID=$3
+TLS_PORT=$(docker port $CONTAINER_ID 5001 | sed 's/0.0.0.0://')
+
+# Determine old redirect and forward rules (drop the leading -A)
+OLD_REDIRECT=$(iptables -S PREROUTING -t nat | grep "dport 443"| sed "s/-A //")
+OLD_FORWARD=$(iptables -S ufw-user-input | egrep 49[0-9]{3} | sed "s/-A //")
+
+# Determine the new redirect and forward rules
+#
+# Incoming request for port 443 is redirected to container's external port
+# Incoming packet now has new destination port, we need to allow that input
+NEW_REDIRECT="PREROUTING --table nat --protocol tcp --dport 443 --jump REDIRECT --to-ports $TLS_PORT"
+NEW_FORWARD="ufw-user-input -p tcp --dport 49158 -m state --state NEW -j ACCEPT"
+
+# Append new rules, but avoid creating a duplicate
+iptables --check $NEW_REDIRECT || iptables --append $NEW_REDIRECT
+iptables --check $FORWARD || iptables -t nat --append $FORWARD
+
+# With new rules in place, delete old rules
+[[ -n "$OLD_REDIRECT" ]]  && iptables -t nat --delete $OLD_REDIRECT
+[[ -n "$OLD_FORWARD" ]]   && iptables -t nat --delete $OLD_FORWARD
+
