@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Get external port number that maps to 5001 (HTTPS)
 CONTAINER_ID=$3
 TLS_PORT=$(docker port $CONTAINER_ID 5001 | sed 's/0.0.0.0://')
