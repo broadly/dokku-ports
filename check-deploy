@@ -3,4 +3,4 @@
 CONTAINER_ID=$3
 TLS_PORT=$(docker port $CONTAINER_ID 5001 | sed 's/0.0.0.0://')
 
-curl https://0.0.0.0:$TLS_PORT || true
+#curl https://0.0.0.0:$TLS_PORT || true

@@ -4,8 +4,8 @@ CONTAINER_ID=$3
 TLS_PORT=$(docker port $CONTAINER_ID 5001 | sed 's/0.0.0.0://')
 
 # Determine old redirect and forward rules (drop the leading -A)
-OLD_REDIRECT=$(iptables -S PREROUTING -t nat | grep "dport 443"| sed "s/-A //")
-OLD_FORWARD=$(iptables -S ufw-user-input | egrep 49[0-9]{3} | sed "s/-A //")
+OLD_REDIRECT=$(sudo iptables -S PREROUTING -t nat | grep "dport 443"| sed "s/-A //")
+OLD_FORWARD=$(sudo iptables -S ufw-user-input | egrep 49[0-9]{3} | sed "s/-A //")
 
 # Determine the new redirect and forward rules
 #
@@ -15,10 +15,10 @@ NEW_REDIRECT="PREROUTING --table nat --protocol tcp --dport 443 --jump REDIRECT 
 NEW_FORWARD="ufw-user-input -p tcp --dport 49158 -m state --state NEW -j ACCEPT"
 
 # Append new rules, but avoid creating a duplicate
-iptables --check $NEW_REDIRECT || iptables --append $NEW_REDIRECT
-iptables --check $FORWARD || iptables -t nat --append $FORWARD
+sudo iptables --check $NEW_REDIRECT || sudo iptables --append $NEW_REDIRECT
+sudo iptables --check $FORWARD      || sudo iptables -t nat --append $FORWARD
 
 # With new rules in place, delete old rules
-[[ -n "$OLD_REDIRECT" ]]  && iptables -t nat --delete $OLD_REDIRECT
-[[ -n "$OLD_FORWARD" ]]   && iptables -t nat --delete $OLD_FORWARD
+[[ -n "$OLD_REDIRECT" ]]  && sudo iptables -t nat --delete $OLD_REDIRECT
+[[ -n "$OLD_FORWARD" ]]   && sudo iptables -t nat --delete $OLD_FORWARD
 
