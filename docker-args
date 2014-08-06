@@ -1,2 +1,18 @@
-# HTTP port 5000, HTTPS on port 5001
-echo "-p 5001"
+#!/usr/bin/env bash
+#
+# Reads BIND file and outputs -p $PORT for each private port listed there.
+APP=$1
+BIND="$DOKKU_ROOT/BIND"
+ARGS=
+if [[ -f "$BIND" ]] ; then
+  exec < "$BIND"
+  while read LINE ; do
+    if [[ "$LINE" =~ [0-9]+: ]] ; then
+      PUBLIC_PORT=${LINE%:*}
+      REST=${LINE#*:}
+      APP_NAME=${REST%:*}
+      PRIVATE_PORT=${REST#*:}
+      echo -n "-p $PRIVATE_PORT "
+    fi
+  done
+fi

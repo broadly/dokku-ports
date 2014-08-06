@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+
+# Recent version of Node
+add-apt-repository -y ppa:chris-lea/node.js 
+apt-get update 
+apt-get install -y nodejs
+
+# Create init.d file with substitute values
+cat $(dirname $0)/portmap \
+  | sed "s/\$PLUGIN_PATH/$PLUGIN_PATH/g" \
+  | sed "s/\$DOKKU_ROOT/$DOKKU_ROOT/g"   \
+  > /etc/init.d/portmap
+
+if ! grep -q dokku-portmap-reload "/etc/sudoers"; then
+  touch /etc/sudoers.tmp
+  cp /etc/sudoers /tmp/sudoers.new
+  echo "%dokku ALL=(ALL)NOPASSWD:/etc/init.d/portmap reload # dokku-portmap-reload" >> /tmp/sudoers.new
+  EDITOR="cp /tmp/sudoers.new" visudo
+  rm /tmp/sudoers.new
+fi
+
+/etc/init.d/portmap start
