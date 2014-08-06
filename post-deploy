@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-/etc/init.d/portmap reload
+sudo /etc/init.d/portmap reload
