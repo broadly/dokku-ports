@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+PLUGIN=$PLUGIN_PATH/$(basename $(dirname $0));
 
 # Recent version of Node
 add-apt-repository -y ppa:chris-lea/node.js 
@@ -7,10 +8,10 @@ apt-get update
 apt-get install -y nodejs
 
 # Create init.d file with substitute values
-cat $(dirname $0)/portmap \
-  | sed "s/\$PLUGIN_PATH/$PLUGIN_PATH/g" \
-  | sed "s/\$DOKKU_ROOT/$DOKKU_ROOT/g"   \
-  > /etc/init.d/portmap
+sed -e "s|\$PLUGIN_PATH|$PLUGIN|g" \
+    -e "s|\$DOKKU_ROOT|$DOKKU_ROOT|g" \
+    $(dirname $0)/portmap > /etc/init.d/portmap
+chmod +x /etc/init.d/portmap
 
 if ! grep -q dokku-portmap-reload "/etc/sudoers"; then
   touch /etc/sudoers.tmp
