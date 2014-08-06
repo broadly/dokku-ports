@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #
-# Reads BIND file and outputs -p $PORT for each private port listed there.
+# Reads PORTMAP file and outputs -p $PORT for each private port listed there.
 APP=$1
-BIND="$DOKKU_ROOT/BIND"
+PORTMAP="$DOKKU_ROOT/PORTMAP"
 ARGS=
-if [[ -f "$BIND" ]] ; then
-  exec < "$BIND"
+if [[ -f "$PORTMAP" ]] ; then
+  exec < "$PORTMAP"
   while read LINE ; do
     if [[ "$LINE" =~ [0-9]+: ]] ; then
       PUBLIC_PORT=${LINE%:*}

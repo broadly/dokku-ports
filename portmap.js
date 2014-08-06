@@ -71,7 +71,7 @@ function bind(publicPort, appName, privatePort) {
 
 // Reload bindings.
 function reload() {
-  var bindings = File.readFileSync( Path.join(dokkuRoot, 'BIND'), 'utf-8');
+  var bindings = File.readFileSync( Path.join(dokkuRoot, 'PORTMAP'), 'utf-8');
   bindings.split(/\n/)
     .filter(function(line) {
       return line.length;
@@ -81,16 +81,16 @@ function reload() {
       if (parts.length === 3) {
         bind(parts[0], parts[1], parts[2]);
       } else
-        console.error("Invalid BIND line", line);
+        console.error("Invalid PORTMAP line", line);
     });
 }
 
 
-// Send SIGHUP to the process to reload BIND file and update bindings
+// Send SIGHUP to the process to reload PORTMAP file and update bindings
 process.on('SIGHUP', reload);
 // Start
 reload();
-// Wait forever.  This is required if BIND is empty and we're not listening on
+// Wait forever.  This is required if PORTMAP is empty and we're not listening on
 // any port.
 setInterval(Function, 5000);
 
