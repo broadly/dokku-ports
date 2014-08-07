@@ -88,7 +88,7 @@ function reloadPorts(portsFile) {
         var path  = Path.dirname(portsFile);
         var parts = line.split(':');
         if (parts.length === 2) {
-          bindPorts(parts[0], parts[2], path);
+          bindPorts(parts[0], parts[1], path);
         } else
           console.error("Invalid PORTS line", line);
       });
