@@ -21,5 +21,5 @@ if ! grep -q dokku-ports-reload "/etc/sudoers"; then
   rm /tmp/sudoers.new
 fi
 
-update-rc.d dokku-ports default
+update-rc.d dokku-ports defaults
 /etc/init.d/dokku-ports start
