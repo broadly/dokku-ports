@@ -84,7 +84,7 @@ function reloadPorts(portsFile) {
       .filter(function(line) {
         return line.length;
       })
-      .each(function(line) {
+      .forEach(function(line) {
         var path  = Path.dirname(portsFile);
         var parts = line.split(':');
         if (parts.length === 2) {
@@ -111,7 +111,7 @@ function reload() {
       .filter(function(filename) {
         return File.existsSync(filename);
       })
-      .each(reloadPorts);
+      .forEach(reloadPorts);
   });
 }
 
