@@ -65,14 +65,14 @@ application's private ports.
 
 **[init](init)** - init.d script for running `dokku-ports` and controlling it.
 
-**[install][install]** - Runs once when you install the plugin.  Installs Node,
+**[install](install)** - Runs once when you install the plugin.  Installs Node,
 `dokku-ports` and init.d script to run `dokku-ports`.
 
-**[post-deploy][post-deploy]** - Runs after successful deploy, instructs
+**[post-deploy](post-deploy)** - Runs after successful deploy, instructs
 `dokku-ports` to reload all `PORTS` files and updates its routing table, routing
 new connections to the newly deployed container.
 
-**[pre-deploy][pre-deploy]** - Runs at the very beginning of the deploy process
+**[pre-deploy](pre-deploy)** - Runs at the very beginning of the deploy process
 and extracts the `PORTS` file from the container, storing it in the
 application's directory, where `docker-args`, `dokku-ports` and `post-deploy`
 can read it.
