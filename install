@@ -10,15 +10,16 @@ apt-get install -y nodejs
 # Create init.d file with substitute values
 sed -e "s|\$PLUGIN_PATH|$PLUGIN|g" \
     -e "s|\$DOKKU_ROOT|$DOKKU_ROOT|g" \
-    $(dirname $0)/init > /etc/init.d/portmap
-chmod +x /etc/init.d/portmap
+    $(dirname $0)/init > /etc/init.d/dokku-ports
+chmod +x /etc/init.d/dokku-ports
 
-if ! grep -q dokku-portmap-reload "/etc/sudoers"; then
+if ! grep -q dokku-ports-reload "/etc/sudoers"; then
   touch /etc/sudoers.tmp
   cp /etc/sudoers /tmp/sudoers.new
-  echo "%dokku ALL=(ALL)NOPASSWD:/etc/init.d/portmap reload # dokku-portmap-reload" >> /tmp/sudoers.new
+  echo "%dokku ALL=(ALL)NOPASSWD:/etc/init.d/dokku-ports reload # dokku-ports-reload" >> /tmp/sudoers.new
   EDITOR="cp /tmp/sudoers.new" visudo
   rm /tmp/sudoers.new
 fi
 
-/etc/init.d/portmap start
+update-rc.d dokku-ports default
+/etc/init.d/dokku-ports start

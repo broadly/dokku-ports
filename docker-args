@@ -1,17 +1,14 @@
 #!/usr/bin/env bash
 #
-# Reads PORTMAP file and outputs -p $PORT for each private port listed there.
+# Reads PORTS file and outputs -p $PORT for each private port listed there.
 APP=$1
-PORTMAP="$DOKKU_ROOT/PORTMAP"
-ARGS=
-if [[ -f "$PORTMAP" ]] ; then
-  exec < "$PORTMAP"
+PORTS="$DOKKU_ROOT/$APP/PORTS"
+if [[ -f "$PORTS" ]] ; then
+  exec < "$PORTS"
   while read LINE ; do
     if [[ "$LINE" =~ [0-9]+: ]] ; then
       PUBLIC_PORT=${LINE%:*}
-      REST=${LINE#*:}
-      APP_NAME=${REST%:*}
-      PRIVATE_PORT=${REST#*:}
+      PRIVATE_PORT=${LINE#*:}
       echo -n "-p $PRIVATE_PORT "
     fi
   done

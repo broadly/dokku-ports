@@ -1,3 +1,12 @@
 #!/usr/bin/env bash
-echo "-----> Reloading PORTMAP"
-sudo /etc/init.d/portmap reload
+# Extracts PORTS file from the application's root directory and save in Dokku
+# app directory.  Tell dokku-ports to reload configuration. 
+APP=$1
+FILENAME=$DOKKU_ROOT/$APP/PORTS
+CONTAINERID=$3
+docker cp $CONTAINERID:/app/PORTS $FILENAME 2> /dev/null || true
+
+if [[ -f "$FILENAME" ]] ; then
+  echo "-----> Reloading dokku-ports"
+  sudo /etc/init.d/dokku-ports reload
+fi

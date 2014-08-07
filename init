@@ -1,27 +1,27 @@
 #!/bin/sh
 
 ### BEGIN INIT INFO
-# Provides:	  portmap
+# Provides:	  dokku-ports
 # Required-Start:    $local_fs $remote_fs $network $syslog $named
 # Required-Stop:     $local_fs $remote_fs $network $syslog $named
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: starts the portmap web server
-# Description:       starts portmap using start-stop-daemon
+# Short-Description: starts the dokku-ports router
+# Description:       starts the dokku-ports router
 ### END INIT INFO
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/bin/node
-DAEMON_OPTS="$PLUGIN_PATH/portmap.js $DOKKU_ROOT"
-NAME=portmap
-DESC=portmap
+DAEMON_OPTS="$PLUGIN_PATH/dokku-ports.js $DOKKU_ROOT"
+NAME=dokku-ports
+DESC=dokku-ports
 
 test -x $DAEMON || exit 0
 
 . /lib/init/vars.sh
 . /lib/lsb/init-functions
 
-PID=/run/portmap.pid
+PID=/run/dokku-ports.pid
 
 #
 # Function that starts the daemon/service
