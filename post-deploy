@@ -2,11 +2,11 @@
 # Extracts PORTS file from the application's root directory and save in Dokku
 # app directory.  Tell dokku-ports to reload configuration. 
 APP=$1
-PATH=$DOKKU_ROOT/$APP
+APP_PATH=$DOKKU_ROOT/$APP
 CONTAINERID=$3
-docker cp $CONTAINERID:/app/PORTS $PATH 2> /dev/null || true
+docker cp $CONTAINERID:/app/PORTS $APP_PATH 2> /dev/null || true
 
-if [[ -f "$PATH/PORTS" ]] ; then
+if [[ -f "$APP_PATH/PORTS" ]] ; then
   echo "-----> Reloading dokku-ports"
   sudo /etc/init.d/dokku-ports reload
 fi
