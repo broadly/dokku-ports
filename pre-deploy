@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Extracts PORTS file from the application's root directory and save in Dokku
+# app directory.
+APP=$1
+ID=$(docker ps | grep dokku/$APP | awk '{print $1}' | head -n 1)
+docker cp $ID:/app/PORTS $DOKKU_ROOT/$APP 2> /dev/null || true
