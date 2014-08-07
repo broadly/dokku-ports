@@ -1,5 +1,7 @@
 This Dokku plugin allows you to connect additional application ports (TCP only).
 
+Designed to work with [Dokku zero downtime deploy](https://github.com/broadly/dokku)
+
 
 ## Quick Start
 
